@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.org.eclipse.jgit.lib.ObjectChecker.type
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -109,9 +110,9 @@ dependencies {
     implementation("io.ktor:ktor-client-json:1.6.4")
     implementation("io.ktor:ktor-client-serialization:1.6.4")
 
-        implementation("io.ktor:ktor-server-core:$ktor_version")
-        implementation("io.ktor:ktor-server-netty:$ktor_version")
-        implementation("io.ktor:ktor-swagger:$ktor_version")
+//        implementation("io.ktor:ktor-server-core:$ktor_version")
+//        implementation("io.ktor:ktor-server-netty:$ktor_version")
+//        implementation("io.ktor:ktor-swagger:$ktor_version")
 
 
 
@@ -120,3 +121,23 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.example.ApplicationKt" // Change to your main class
+    }
+
+    from({
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    })
+}
+
+tasks {
+    shadowJar {
+        archiveClassifier.set("")
+    }
+}
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+

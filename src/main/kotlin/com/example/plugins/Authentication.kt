@@ -2,12 +2,13 @@ package com.example.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.example.util.security.token.TokenConfig
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
 
-fun Application.configureAuth() {
+fun Application.configureAuth(config:TokenConfig) {
 
     install(Authentication) {
 
@@ -17,7 +18,7 @@ fun Application.configureAuth() {
             realm = this@configureAuth.environment.config.property("jwt.realm").getString()
             verifier(
                 JWT
-                    .require(Algorithm.HMAC256(jwtSecret))
+                    .require(Algorithm.HMAC256(config.secret))
                     .withAudience(jwtAudience)
                     .withIssuer(this@configureAuth.environment.config.property("jwt.domain").getString())
                     .build()

@@ -6,6 +6,7 @@ import com.example.data.repository.user.UserRepository
 import com.example.data.repository.user.UserRepositoryImpl
 import com.example.plugins.*
 import com.example.util.Constants.DATABASE_NAME
+import com.example.util.security.token.TokenConfig
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import io.ktor.server.application.*
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -19,8 +20,15 @@ fun main(args: Array<String>) {
 @OptIn(DelicateCoroutinesApi::class)
 fun Application.module() {
 
+    val tokenConfig = TokenConfig(
+        issuer = environment.config.property("jwt.issuer").getString(),
+        audience = environment.config.property("jwt.audience").getString(),
+        expiresIn = 365L * 1000L * 60L * 60L * 24L,
+        secret = System.getenv("JWT_SECRET")
+    )
+
     configureKoin()
-    configureAuth()
+    configureAuth(tokenConfig)
     configureRouting()
     configureSerialization()
     configureMonitoring()
