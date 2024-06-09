@@ -113,6 +113,13 @@ dependencies {
     implementation("io.ktor:ktor-client-json:1.6.4")
     implementation("io.ktor:ktor-client-serialization:1.6.4")
 
+        implementation("io.ktor:ktor-server-core:$ktor_version")
+        implementation("io.ktor:ktor-server-netty:$ktor_version")
+        implementation("io.ktor:ktor-server-cors:$ktor_version")
+        // other dependencies
+
+
+
 //        implementation("io.ktor:ktor-server-core:$ktor_version")
 //        implementation("io.ktor:ktor-server-netty:$ktor_version")
 //        implementation("io.ktor:ktor-swagger:$ktor_version")
