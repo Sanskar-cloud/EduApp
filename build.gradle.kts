@@ -1,4 +1,6 @@
 import org.gradle.internal.impldep.org.eclipse.jgit.lib.ObjectChecker.type
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree.Companion.test
+import org.jetbrains.kotlin.gradle.plugin.KotlinTargetHierarchy.SourceSetTree.Companion.test
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -13,6 +15,7 @@ plugins {
     kotlin("jvm") version "2.0.0"
     id("io.ktor.plugin") version "2.3.11"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.example"
@@ -139,5 +142,12 @@ tasks {
 tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+tasks.test {
+    systemProperty("JWT_SECRET", System.getenv("JWT_SECRET"))
+}
+tasks {
+    create("stage").dependsOn("installDist")
+}
+
 
 

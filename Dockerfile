@@ -1,14 +1,10 @@
-# Use the official image as a parent image
-FROM openjdk:17-jdk-slim
+FROM gradle:7-jdk11 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle buildFatJar --no-daemon
 
-# Set the working directory
-WORKDIR /app
-
-# Copy the build files
-COPY ./build/libs/*.jar app.jar
-
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
-
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM openjdk:11
+EXPOSE 8082:8082
+RUN mkdir /app
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/com.example.educationn.jar
+ENTRYPOINT ["java","-jar","/app/com.example.educationn.jar"]
