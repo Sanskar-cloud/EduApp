@@ -1,17 +1,14 @@
+# Use the official image as a parent image
 FROM openjdk:17-jdk-slim
 
-WORKDIR /src
-COPY . /src
+# Set the working directory
+WORKDIR /app
 
-RUN apt-get update
-RUN apt-get install -y dos2unix
-RUN dos2unix gradlew
+# Copy the build files
+COPY ./build/libs/*.jar app.jar
 
-RUN bash gradlew fatJar
-
-WORKDIR /run
-RUN cp /src/build/libs/*.jar /run/server.jar
-
+# Make port 8080 available to the world outside this container
 EXPOSE 8080
 
-CMD java -jar /run/server.jar
+# Run the jar file
+ENTRYPOINT ["java", "-jar", "app.jar"]
