@@ -19,12 +19,12 @@ fun Application.configureAuth(config:TokenConfig) {
             verifier(
                 JWT
                     .require(Algorithm.HMAC256(config.secret))
-                    .withAudience(jwtAudience)
-                    .withIssuer(this@configureAuth.environment.config.property("jwt.domain").getString())
+                    .withAudience(config.audience)
+                    .withIssuer(config.issuer)
                     .build()
             )
             validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
+                if (credential.payload.audience.contains(config.audience)) JWTPrincipal(credential.payload) else null
             }
 
         }
